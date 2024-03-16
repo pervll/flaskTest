@@ -1,4 +1,14 @@
 <html>
+   <head>
+      <!--
+      <script>
+         function removeSpaces() {
+            var input = document.getElementsByID("username");
+            input.value = input.value.replace(/\s/g, "");
+         }
+     </script>
+      -->
+   </head>
    <link rel="stylesheet" href="/static/css/style.css">
    <body>
       <form action = "http://127.0.0.1:5000/login" method = "post">
@@ -7,12 +17,12 @@
                <h1>Login</h1>
             </div>
             <div class="panel">
-               <form>
+               <form onsubmit="removeSpaces()">
                   <span>
-                     <input type="text" name="username" placeholder="Username">
+                     <input type="text" name="username" placeholder="Username" required onkeyup="this.value=this.value.replace(/\s+/g,'')">
                   </span><br>
                   <span>
-                     <input type="password" name="password"placeholder="Password">
+                     <input type="password" name="password" placeholder="Password" required>
                   </span><br>
                   <button class="submit">Submit</button>
                </form><br>

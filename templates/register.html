@@ -1,0 +1,37 @@
+<html>
+   <link rel="stylesheet" href="/static/css/style.css">
+   <body>
+      <form action = "http://127.0.0.1:5000/register" method = "post">
+         <div class="container">
+            <div class="header">
+               <h1>Register</h1>
+            </div>
+            <div class="panel">
+               <form>
+                  <span>
+                     <input type="text" name="username" placeholder="Enter your username" required onkeyup="this.value=this.value.replace(/\s+/g,'')">
+                  </span><br>
+                  <span>
+                     <input type="password" name="password" id="pwd" placeholder="Enter your password" required>
+                  </span><br>
+                  <span>
+                    <input type="password" name="confirm_password" id="confrim_pwd" placeholder="Cofirm your password" required>
+                  </span><br>
+                  <button class="submit" onclick="checkPassword()">Submit</button>
+                  <script>
+                     function checkPassword(){
+                        if (document.getElementById("pwd")!=document.getElementById("confirm_pwd")){
+                           alert("Confirmed password doesn't match")
+                           return false
+                        } else{
+                           
+                        }
+                     }
+                  </script>
+               </form><br>
+               <a href="/login">Already have an account? Login</a>
+            </div>
+         </div>
+      </form>
+   </body>
+</html>
