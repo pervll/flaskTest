@@ -23,5 +23,14 @@
             </div>
          </div>
       </form>
+      {% with messages = get_flashed_messages(category_filter=['error']) %}
+         {% if messages %}
+            <ul class="errors">
+               {% for message in messages %}
+                  <li>{{ message }}</li>
+               {% endfor %}
+            </ul>
+         {% endif %}
+      {% endwith %}
    </body>
 </html>

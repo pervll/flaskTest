@@ -1,13 +1,5 @@
 <html>
    <head>
-      <!--
-      <script>
-         function removeSpaces() {
-            var input = document.getElementsByID("username");
-            input.value = input.value.replace(/\s/g, "");
-         }
-     </script>
-      -->
    </head>
    <link rel="stylesheet" href="/static/css/style.css">
    <body>
@@ -26,13 +18,22 @@
                   </span><br>
                   <button class="submit">Submit</button>
                </form><br>
-               <a href="{{ url_for('register') }}">No accounts? Register here</a>
+               <a href="/register">No accounts? Register here</a>
             </div>
          </div>
       </form>
       {% with messages = get_flashed_messages(category_filter=['error']) %}
          {% if messages %}
             <ul class="errors">
+               {% for message in messages %}
+                  <li>{{ message }}</li>
+               {% endfor %}
+            </ul>
+         {% endif %}
+      {% endwith %}
+      {% with messages = get_flashed_messages(category_filter=['info']) %}
+         {% if messages %}
+            <ul class="infos">
                {% for message in messages %}
                   <li>{{ message }}</li>
                {% endfor %}
