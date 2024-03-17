@@ -39,8 +39,7 @@ def login():
 def success(name):
     return 'welcome %s' % name
 
-#这里有bug无法注册
-@app.route('/register')
+@app.route('/register',methods = ['POST','GET'])
 def register():
     error=None
     if request.method == 'POST':
@@ -48,9 +47,17 @@ def register():
         password = request.form['password']
         c_password = request.form['confirm_password']
         if password==c_password:
-            flash('You have successfully registered. Please log in.','info')
-            return redirect(url_for('login'))
-        flash("Passwords doesn't match. Please try again!",'error')
+            new_account=(username,password)
+            if insert_into("accounts",new_account):
+                print(1)
+                flash('You have successfully registered. Please log in.','info')
+                return redirect(url_for('login'))
+            else:
+                print(2)
+                flash('This username has been taken, please try again.','error')
+                return redirect(url_for('register'))
+        else:
+            flash("Passwords doesn't match. Please try again!",'error')
     return render_template("register.html")
 
 if __name__ == '__main__':
