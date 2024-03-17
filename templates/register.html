@@ -17,19 +17,9 @@
                   <span>
                     <input type="password" name="confirm_password" id="confrim_pwd" placeholder="Cofirm your password" required>
                   </span><br>
-                  <button class="submit" onclick="checkPassword()">Submit</button>
-                  <script>
-                     function checkPassword(){
-                        if (document.getElementById("pwd")!=document.getElementById("confirm_pwd")){
-                           alert("Confirmed password doesn't match")
-                           return false
-                        } else{
-                           
-                        }
-                     }
-                  </script>
+                  <button class="submit">Submit</button>
                </form><br>
-               <a href="/login">Already have an account? Login</a>
+               <a href="{{ url_for('login') }}">Already have an account? Login</a>
             </div>
          </div>
       </form>

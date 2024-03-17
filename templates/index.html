@@ -4,7 +4,15 @@
   <meta charset="utf-8">
   <title>test</title>
 </head>
-<body> 
-    <p>{{my_name}}</p>
+<body>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <h3>Welcome{% if username %}, {{ username }}{% endif %}!</h3> 
+  <a href = "{{ url_for('login') }}">login</a>
 </body>
 </html>

@@ -4,7 +4,8 @@ import sqlite3
 def init():
     con=sqlite3.connect("./db/accounts.sqlite")
     cur=con.cursor()
-    cur.execute("DELETE FROM catalog")
+    cur.execute("CREATE TABLE IF NOT EXISTS catalog \
+    (id INTEGER PRIMARY KEY NOT NULL, username TEXT UNIQUE, password TEXT)")
     sql1='''
     insert into catalog(ID,username,password)
     values (0, 'Admin', '123456')
