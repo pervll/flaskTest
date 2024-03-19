@@ -60,5 +60,10 @@ def register():
             flash("Passwords doesn't match. Please try again!",'error')
     return render_template("register.html")
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
     app.run(debug=True)
