@@ -11,7 +11,6 @@ app = Flask(__name__)
 app.secret_key='asfda8r9s' #这个好像和session有关
 init()
 
-#log out清理session功能未完成
 @app.route('/')
 def index():
     if 'user' in session:
@@ -65,5 +64,11 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+@app.route('/chess')
+def chess():
+    if 'user' in session:
+        return "1"
+    return "0"
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port="5000", debug=True)

@@ -14,8 +14,15 @@
   {% endwith %}
   <h3>Welcome{% if username %}, {{ username }}{% endif %}!</h3> 
   <a href = "{{ url_for('login') }}">login</a>
+  <form action="{{ url_for('chess') }}">
+    <span>
+      {%if username %}<button>Chess</button>{% endif %}
+    </span>
+  </form>
   <form action="{{ url_for('logout') }}">
-    <button>Log out</button>
+    <span>
+      {%if username %}<button>Log out</button>{% endif %}
+    </span>
   </form>
 </body>
 </html>
