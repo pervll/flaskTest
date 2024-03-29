@@ -9,7 +9,16 @@ def init():
         )
     ''')
     cur.execute('''
+        create table if not exists valid_accounts (
+            id integer primary key autoincrement
+            username text unique
+        )
+    ''')
+    cur.execute('''
         delete from accounts
+    ''')
+    cur.execute('''
+        delete from valid_accounts
     ''')
     cur.execute('''
         insert into accounts

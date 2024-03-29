@@ -6,6 +6,7 @@ from init import init
 from db import(
     connect_db,close_db,insert_into,get_db
 )
+import time
 
 app = Flask(__name__)
 app.secret_key='asfda8r9s' #这个好像和session有关
@@ -67,7 +68,24 @@ def logout():
 @app.route('/chess')
 def chess():
     if 'user' in session:
-        return "1"
+        username=session['user']
+        con=connect_db()
+        cur=con.cursor()
+        
+        cur.execute('insert into valid_accounts (username) values (?)',username)
+        while True:
+            db=get_db()
+            if len(db)==2:
+                for i in db:
+                    if(db[i][1]=="username"):
+                        if(db[i][0]%2==0):
+                            partner=db[i-1]
+                        else:
+                            partner=db[i+1]
+                        
+                            
+                    
+            
     return "0"
 
 if __name__ == '__main__':
