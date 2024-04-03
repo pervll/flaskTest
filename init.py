@@ -9,11 +9,13 @@ def init():
         )
     ''')
     cur.execute('''
-        delete from accounts
+        create table if not exists valid_accounts (
+            id integer primary key autoincrement,
+            username text
+        )
     ''')
     cur.execute('''
-        insert into accounts
-            values('Admin','123456')
+        delete from valid_accounts
     ''')
     con.commit()
     con.close()

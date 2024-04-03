@@ -6,6 +6,7 @@ from init import init
 from db import(
     connect_db,close_db,insert_into,get_db
 )
+import time
 
 app = Flask(__name__)
 app.secret_key='asfda8r9s' #这个好像和session有关
@@ -67,8 +68,47 @@ def logout():
 @app.route('/chess')
 def chess():
     if 'user' in session:
-        return "1"
+        username=[(session['user'])]
+        con=connect_db()
+        cur=con.cursor()
+        cur.execute('insert into valid_accounts (username) values (?)',username)
+        con.commit()
+        con.close()
+        while True:
+            db=get_db("valid_accounts")
+            flag=False
+            if len(db)==2:
+                for i in range(0,len(db)):
+                    if(db[i][1]==username[0]):
+                        if(db[i][0]%2==0):
+                            partner=db[i-1][1]
+                            match_index=db[i-1][0]+db[i][0]
+                            master=True
+                        else:
+                            partner=db[i+1][1]
+                            match_index=db[i-1][0]+db[i][0]
+                            master=False
+                        flag=True
+                        print(partner)
+            if flag:
+                break 
+        #将配对完成的二人组从数据库中删除
+
+
+        #建立新的棋局数据库
+        if master:
+            con=connect_db()
+            cur=con.cursor()
+            sql='create table if not exists %s (player text, manual text)' %('s'+str(match_index))
+            cur.execute(sql)
+            con.close()
+        return redirect(url_for('chess_game',index=match_index))
     return "0"
+
+@app.route('/chess_game/<int:index>')
+def chess_game(index):
+    return "Success!"
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="5000", debug=True)

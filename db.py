@@ -36,4 +36,3 @@ def get_db(SHEET_NAME):
     cur.execute("select * from %s" %(SHEET_NAME))
     con.commit()
     return cur.fetchall()
-
