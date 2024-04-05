@@ -15,7 +15,9 @@ def init():
     cur.execute('''
         create table if not exists accounts (
             username text unique, 
-            password text
+            password text,
+            onPlay integer,
+            map_name text
         )
     ''')
     cur.execute('''
@@ -30,8 +32,8 @@ def init():
     cur.execute('''
         delete from valid_accounts
     ''')
-    sql1='INSERT INTO accounts (username,password) VALUES (?,?)'
-    cur.executemany(sql1,[('Admin','123456'),('Admin1','123456')])
+    sql1='INSERT INTO accounts (username,password,onPlay) VALUES (?,?,?)'
+    cur.executemany(sql1,[('Admin','123456',0),('Admin1','123456',0)])
     cur.execute('''
                 UPDATE sqlite_sequence SET seq = 0 WHERE name='valid_accounts';
                 ''')

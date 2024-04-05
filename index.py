@@ -72,6 +72,8 @@ def chess():
     if 'user' in session:
         username=[(session['user'])]
         partner=''
+        a=''
+        flag=False
         con=connect_db()
         cur=con.cursor()
         cur.execute('insert into valid_accounts (username) values (?)',username)
@@ -79,39 +81,57 @@ def chess():
         con.close()
         while True:
             db=get_db("valid_accounts")
-            flag=False
+            con.close()
             if len(db)==2:
                 for i in range(0,len(db)):
                     if(db[i][1]==username[0]):
                         if(db[i][0]%2==0):
                             partner=db[i-1][1]
-                            match_index=db[i-1][0]+db[i][0]
                             master=True
                         else:
                             partner=db[i+1][1]
-                            match_index=db[i-1][0]+db[i][0]
                             master=False
                         flag=True
-                        print(partner)
             if flag:
                 break 
-        #将配对完成的二人组从数据库中删除
+        if flag==False:
+            return redirect(url_for('fail'))
+
         #建立新的棋局数据库
         if master:
+            a=str('x'+str(uuid.uuid3(uuid.NAMESPACE_DNS,username[0]+'_'+partner))[0:8])
             con=connect_db()
             cur=con.cursor()
-            a='x'+str(uuid.uuid1())[0:8]
             cur.execute(f"create table if not exists {a} (playerW text, playerB text, map text);")
-            cur.execute(f"insert into {a} values(?,?,?);",(partner,username[0],json.dumps(config.ORIGINAL_MAP)))
-            cur.execute(f"DELETE FROM valid_accounts WHERE username IN (?,?);",(partner,username[0]))
+            cur.execute(f"insert into {a} values(?,?,?);",(username[0],partner,json.dumps(config.ORIGINAL_MAP)))
+            cur.execute("UPDATE accounts SET onPlay = 1 WHERE username IN (?,?)",(username[0],partner))
+            cur.execute(f"UPDATE accounts SET map_name = ? WHERE username IN (?,?)",(a,username[0],partner))
             con.commit()
             con.close()
-            return redirect(url_for('chess_game',index=a))
+        else:
+            a=str('x'+str(uuid.uuid3(uuid.NAMESPACE_DNS,partner+'_'+username[0]))[0:8])
+            #con=connect_db()
+            #cur=con.cursor()
+            #cur.execute(f"SELECT map_name FROM accounts WHERE username = {username[0]}")
+            #con.commit()
+            #a=cur.fetchall()
+            #close_db(con)
+        #con=connect_db()
+        #cur=con.cursor()
+        #cur.execute("DELETE FROM valid_accounts WHERE username IN (?,?);",(username[0],partner))
+        #con.commit()
+        #con.close()
+        return redirect(url_for('chess_game',index=a))
+    #TODO 检测到onplay就把自己从valid_accounts中丢出
     return "0"
 
 @app.route('/chess_game/<index>')
 def chess_game(index):
-    return "Success!"
+    return render_template("chess_game.html")
+
+@app.route('/fail')
+def fail():
+    return "Fail"
 
 
 if __name__ == '__main__':
