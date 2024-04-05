@@ -17,9 +17,10 @@ def insert_into(SHEET_NAME,DATA):
     cur=con.cursor()
     N=len(DATA)
     sql1="insert into %s values(%s)" %(SHEET_NAME,(N-1)*"?,"+"?")
-    #print(sql1)
+    print(sql1)
     try:
         cur.execute(sql1,DATA)
+        print(sql1,DATA)
         con.commit()
     except:
         flag=False

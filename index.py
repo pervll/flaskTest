@@ -6,10 +6,12 @@ from init import init
 from db import(
     connect_db,close_db,insert_into,get_db
 )
-import time
+import time,uuid,json
+from settings import Config
+config=Config()
 
 app = Flask(__name__)
-app.secret_key='asfda8r9s' #这个好像和session有关
+app.config.from_object('settings.EnvConfig')
 init()
 
 @app.route('/')
@@ -69,6 +71,7 @@ def logout():
 def chess():
     if 'user' in session:
         username=[(session['user'])]
+        partner=''
         con=connect_db()
         cur=con.cursor()
         cur.execute('insert into valid_accounts (username) values (?)',username)
@@ -93,22 +96,23 @@ def chess():
             if flag:
                 break 
         #将配对完成的二人组从数据库中删除
-
-
         #建立新的棋局数据库
         if master:
             con=connect_db()
             cur=con.cursor()
-            sql='create table if not exists %s (player text, manual text)' %('s'+str(match_index))
-            cur.execute(sql)
+            a='x'+str(uuid.uuid1())[0:8]
+            cur.execute(f"create table if not exists {a} (playerW text, playerB text, map text);")
+            cur.execute(f"insert into {a} values(?,?,?);",(partner,username[0],json.dumps(config.ORIGINAL_MAP)))
+            cur.execute(f"DELETE FROM valid_accounts WHERE username IN (?,?);",(partner,username[0]))
+            con.commit()
             con.close()
-        return redirect(url_for('chess_game',index=match_index))
+            return redirect(url_for('chess_game',index=a))
     return "0"
 
-@app.route('/chess_game/<int:index>')
+@app.route('/chess_game/<index>')
 def chess_game(index):
     return "Success!"
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port="5000", debug=True)
+    app.run(host=config.HOST, port=config.PORT)
