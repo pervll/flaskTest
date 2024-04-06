@@ -112,24 +112,26 @@ def chess():
             con.close()
         else:
             a=str('x'+str(uuid.uuid3(uuid.NAMESPACE_DNS,partner+'_'+username[0]))[0:8])
-            #con=connect_db()
-            #cur=con.cursor()
-            #cur.execute(f"SELECT map_name FROM accounts WHERE username = {username[0]}")
-            #con.commit()
-            #a=cur.fetchall()
-            #close_db(con)
-        #con=connect_db()
-        #cur=con.cursor()
-        #cur.execute("DELETE FROM valid_accounts WHERE username IN (?,?);",(username[0],partner))
-        #con.commit()
-        #con.close()
         return redirect(url_for('chess_game',index=a))
     return "0"
 
 @app.route('/chess_game/<index>')
 def chess_game(index):
-    #TODO 检测到onplay就把自己从valid_accounts中丢出    
     session['map']=index
+    #TODO 检测到onplay就把自己从valid_accounts中丢出  
+    username=session['user']
+    con=connect_db()
+    cur=con.cursor()
+    cur.execute(f'SELECT onplay FROM accounts WHERE username = "{username}"')
+    con.commit()
+    is_playing=cur.fetchall()[0][0]
+    print(is_playing)
+    if is_playing==1:
+        con.execute(f'DELETE FROM valid_accounts WHERE username = "{username}"')
+    else:
+        return redirect(url_for('fail'))
+    con.close()
+    
     #con=connect_db()
     #cur=con.cursor()
     #cur.execute("DELETE FROM valid_accounts WHERE username = %s" %(session['user']))
@@ -138,7 +140,9 @@ def chess_game(index):
     #data=cur.fetchall()
     #con.commit()
     #close_db(con)
-    return render_template("chess_game.html",**config.ORIGINAL_MAP)
+
+    #return render_template("chess_game.html",**config.ORIGINAL_MAP)
+    return "Success!"
 #TODO 在js中遍历White和Black并渲染棋子，现在遍历有一点问题
 
 @app.route('/fail')
