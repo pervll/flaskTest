@@ -4,7 +4,7 @@ from flask import (
 import sqlite3
 from init import init
 from db import(
-    connect_db,close_db,insert_into,get_db
+    connect_db,close_db,insert_into,get_db,set_null
 )
 import time,uuid,json
 from settings import Config
@@ -49,13 +49,13 @@ def register():
         password = request.form['password']
         c_password = request.form['confirm_password']
         if password==c_password:
-            new_account=(username,password)
+            new_account=(username,password,0,'')
             if insert_into("accounts",new_account):
-                print(1)
                 flash('You have successfully registered. Please log in.','info')
+                #set_null("accounts","map_name",f"WHERE username = {username}")
+                #TODO set_null failed
                 return redirect(url_for('login'))
             else:
-                print(2)
                 flash('This username has been taken, please try again.','error')
                 return redirect(url_for('register'))
         else:
@@ -122,7 +122,7 @@ def chess():
         #con.commit()
         #con.close()
         return redirect(url_for('chess_game',index=a))
-    #TODO 检测到onplay就把自己从valid_accounts中丢出
+    #TODO 检测到onplay就把自己从valid_accounts中丢出    
     return "0"
 
 @app.route('/chess_game/<index>')

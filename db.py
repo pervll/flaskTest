@@ -20,7 +20,6 @@ def insert_into(SHEET_NAME,DATA):
     print(sql1)
     try:
         cur.execute(sql1,DATA)
-        print(sql1,DATA)
         con.commit()
     except:
         flag=False
@@ -29,6 +28,15 @@ def insert_into(SHEET_NAME,DATA):
     finally:
         close_db(con)
     return flag
+
+def set_null(SHEET_NAME,COLUMN,CONDITION):
+    con=connect_db()
+    cur=con.cursor()
+    print("UPDATE %s SET %s = NULL " %(SHEET_NAME,COLUMN) +CONDITION)
+    cur.execute("update %s SET %s = NULL " %(SHEET_NAME,COLUMN) +CONDITION)
+    con.commit()
+    close_db(con)
+    return
 
 #获取SHEET_NAME中所有的元素
 def get_db(SHEET_NAME):
