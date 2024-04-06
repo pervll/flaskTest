@@ -126,7 +126,9 @@ def chess_game(index):
     is_playing=cur.fetchall()[0][0]
     print(is_playing)
     if is_playing==1:
-        con.execute(f'DELETE FROM valid_accounts WHERE username = "{username}"')
+        print("yes")
+        cur.execute(f'DELETE FROM valid_accounts WHERE username = "{username}" ')
+        con.commit()
     else:
         return redirect(url_for('fail'))
     con.close()
