@@ -69,6 +69,7 @@ def logout():
 
 @app.route('/chess')
 def chess():
+    
     if 'user' in session:
         username=[(session['user'])]
         partner=''
@@ -102,9 +103,10 @@ def chess():
             a=str('x'+str(uuid.uuid3(uuid.NAMESPACE_DNS,username[0]+'_'+partner))[0:8])
             con=connect_db()
             cur=con.cursor()
-            cur.execute(f"create table if not exists {a} (playerW text, playerB text, map text);")
-            cur.execute(f"insert into {a} values(?,?,?);",(username[0],partner,json.dumps(config.ORIGINAL_MAP)))
+            cur.execute(f"create table if not exists {a} (playerW text, playerB text, map text, current_player text);")
+            cur.execute(f"insert into {a} values(?,?,?,?);",(username[0],partner,json.dumps(config.ORIGINAL_MAP),username[0]))
             cur.execute("UPDATE accounts SET onPlay = 1 WHERE username IN (?,?)",(username[0],partner))
+            session['master']=1
             cur.execute(f"UPDATE accounts SET map_name = ? WHERE username IN (?,?)",(a,username[0],partner))
             con.commit()
             con.close()
@@ -122,12 +124,22 @@ def chess():
         #con.commit()
         #con.close()
         return redirect(url_for('chess_game',index=a))
-    #TODO 检测到onplay就把自己从valid_accounts中丢出    
     return "0"
 
 @app.route('/chess_game/<index>')
 def chess_game(index):
-    return render_template("chess_game.html")
+    #TODO 检测到onplay就把自己从valid_accounts中丢出    
+    session['map']=index
+    #con=connect_db()
+    #cur=con.cursor()
+    #cur.execute("DELETE FROM valid_accounts WHERE username = %s" %(session['user']))
+    #con.commit()
+    #cur.execute(f"SELECT map FROM {index}")
+    #data=cur.fetchall()
+    #con.commit()
+    #close_db(con)
+    return render_template("chess_game.html",**config.ORIGINAL_MAP)
+#TODO 在js中遍历White和Black并渲染棋子，现在遍历有一点问题
 
 @app.route('/fail')
 def fail():

@@ -3,8 +3,23 @@
 <head>
   <meta charset="utf-8">
   <title>test</title>
+  <link rel="stylesheet" src="/static/css/chess_style"></link>
 </head>
 <body>
-  <p>Success</p>
+  <canvas id="board"></canvas>
 </body>
+<script src="/static/js/chess.js"></script>
+<script>
+ 
+  var list=['K','Q','B1','B2','N1','N2','R1','R2','P1','P2','P3','P4','P5','P6','P7','P8']
+  var w="{{ White }}"
+  console.log(w)
+  for (let key in w) {
+    console.log(key)
+    var value=w[key]
+    var top=("e".charCodeAt()-value.charAt(1).charCodeAt())*128+7.75
+    var left=(parseInt(value.charAt(2))-1)*128+7.75
+    draw_chess("w"+key,top,left)
+  }
+</script>
 </html>
