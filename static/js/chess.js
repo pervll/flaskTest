@@ -18,14 +18,14 @@ var c=document.createElement('img');
     c.setAttribute('height',1024);
     c.setAttribute('src',"/static/resources/chessboard.jpg")
     document.body.appendChild(c);
-function draw_chess(name,top,left) {
+function draw_chess(name,route,top,left) {
     var c=document.createElement('img');
     c.id=name;
     c.style.position='absolute'
-    c.style.top=toString(top)+"px";
-    c.style.left=toString(left)+"px";
+    c.style.top=top.toString()+"px";
+    c.style.left=left.toString()+"px";
     c.setAttribute('width',112.5);
     c.setAttribute('height',112.5);
-    c.setAttribute('src',"/static/resources/"+name+".svg")
+    c.setAttribute('src',"/static/resources/"+route)
     document.body.appendChild(c);
 }

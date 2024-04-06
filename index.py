@@ -103,7 +103,7 @@ def chess():
             con=connect_db()
             cur=con.cursor()
             cur.execute(f"create table if not exists {a} (playerW text, playerB text, map text, current_player text);")
-            cur.execute(f"insert into {a} values(?,?,?,?);",(username[0],partner,json.dumps(config.ORIGINAL_MAP),username[0]))
+            cur.execute(f"insert into {a} values(?,?,?,?);",(username[0],partner,config.DEFAULT_STATUS,username[0]))
             cur.execute("UPDATE accounts SET onPlay = 1 WHERE username IN (?,?)",(username[0],partner))
             session['master']=1
             cur.execute(f"UPDATE accounts SET map_name = ? WHERE username IN (?,?)",(a,username[0],partner))
@@ -131,17 +131,17 @@ def chess_game(index):
         return redirect(url_for('fail'))
     con.close()
     
-    #con=connect_db()
-    #cur=con.cursor()
+    con=connect_db()
+    cur=con.cursor()
     #cur.execute("DELETE FROM valid_accounts WHERE username = %s" %(session['user']))
     #con.commit()
-    #cur.execute(f"SELECT map FROM {index}")
-    #data=cur.fetchall()
-    #con.commit()
-    #close_db(con)
+    cur.execute(f"SELECT map FROM {index}")
+    data=cur.fetchall()[0][0]
+    con.commit()
+    close_db(con)
 
     #return render_template("chess_game.html",**config.ORIGINAL_MAP)
-    return "Success!"
+    return render_template("chess_game.html",data=data)
 #TODO 在js中遍历White和Black并渲染棋子，现在遍历有一点问题
 
 @app.route('/fail')
