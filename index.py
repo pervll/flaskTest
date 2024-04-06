@@ -52,8 +52,7 @@ def register():
             new_account=(username,password,0,'')
             if insert_into("accounts",new_account):
                 flash('You have successfully registered. Please log in.','info')
-                #set_null("accounts","map_name",f"WHERE username = {username}")
-                #TODO set_null failed
+                set_null("accounts","map_name",f'WHERE username = "{username}" ')
                 return redirect(url_for('login'))
             else:
                 flash('This username has been taken, please try again.','error')
@@ -118,7 +117,7 @@ def chess():
 @app.route('/chess_game/<index>')
 def chess_game(index):
     session['map']=index
-    #TODO 检测到onplay就把自己从valid_accounts中丢出  
+    #检测到onplay就把自己从valid_accounts中丢出  
     username=session['user']
     con=connect_db()
     cur=con.cursor()
