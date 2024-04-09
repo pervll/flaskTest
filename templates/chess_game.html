@@ -10,44 +10,6 @@
 </body>
 <script src="/static/js/chess.js"></script>
 <script>
-  var data="{{ data }}"
-  var rows=data.split('?')[0].split('/')
-  var current=data.split('?')[1]
-  var j=0
-  for (var row of rows) {
-    var k=0;
-    for (var i=0;i<row.length;i=i+2){
-      var s=row.slice(i,i+2)
-      if (s.charAt(1)!="o"){
-        if (/^[a-z]$/.test(s.charAt(1))) {
-          draw_chess(s,"black/"+s.charAt(1)+".svg",j*128+7.75,k*128+7.75)
-        } else {
-          draw_chess(s,"white/"+s.charAt(1)+".svg",j*128+7.75,k*128+7.75)
-        }
-        k++
-      } else {
-        k+=parseInt(s.charAt(1))
-      }
-    }
-    j++
-  }
-</script>
-</html>
-
-
-
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>test</title>
-  <link rel="stylesheet" src="/static/css/chess_style"></link>
-</head>
-<body>
-  <canvas id="board"></canvas>
-</body>
-<script src="/static/js/chess.js"></script>
-<script>
   var c=document.createElement('img');
   c.id='board';
   c.style.position='absolute'
