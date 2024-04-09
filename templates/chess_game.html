@@ -15,17 +15,72 @@
   var current=data.split('?')[1]
   var j=0
   for (var row of rows) {
+    var k=0;
     for (var i=0;i<row.length;i=i+2){
-      if (row.slice(i,i+2).charAt(1)!="o"){
-        var s=row.slice(i,i+2)
+      var s=row.slice(i,i+2)
+      if (s.charAt(1)!="o"){
         if (/^[a-z]$/.test(s.charAt(1))) {
-          draw_chess(s,"black/"+s.charAt(1)+".svg",j*128+7.75,i/2*128+7.75)
+          draw_chess(s,"black/"+s.charAt(1)+".svg",j*128+7.75,k*128+7.75)
         } else {
-          draw_chess(s,"white/"+s.charAt(1)+".svg",j*128+7.75,i/2*128+7.75)
+          draw_chess(s,"white/"+s.charAt(1)+".svg",j*128+7.75,k*128+7.75)
         }
+        k++
+      } else {
+        k+=parseInt(s.charAt(1))
       }
     }
     j++
   }
+</script>
+</html>
+
+
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>test</title>
+  <link rel="stylesheet" src="/static/css/chess_style"></link>
+</head>
+<body>
+  <canvas id="board"></canvas>
+</body>
+<script src="/static/js/chess.js"></script>
+<script>
+  var c=document.createElement('img');
+  c.id='board';
+  c.style.position='absolute'
+  c.style.top='0px';
+  c.style.left='0px';
+  c.setAttribute('width',1024);
+  c.setAttribute('height',1024);
+  c.setAttribute('src',"/static/resources/chessboard.jpg")
+  document.body.appendChild(c);
+  var data="{{ data }}"
+  render_chess(data)
+
+  var temp=[]
+  var sx=0;
+  var sy=0;
+  var click_cnt=1
+  document.addEventListener("click", function(event) {
+    click_cnt++;
+    sx=event.pageX
+    sy=event.pageY
+    if (click_cnt>2) {
+      x=pageX
+      y=pageY
+      $.ajax({
+        url:'', //填入判定程序所在route
+        dataType:'json',
+        type:'POST',
+        data:{'sx':sx,'sy':sy,'x':x,'y':y},
+        success:function(data) {
+          render_chess(data)
+        }
+      })
+    }
+  })
 </script>
 </html>
