@@ -22,17 +22,15 @@ function component(width, height, input, x, y, type , name) {
     this.height = height; 
     this.x = x;
     this.y = y;    
-<<<<<<< Updated upstream:templates/js/chess.js
     this.update = function() {
         ctx = myGameArea.context;
-=======
     this.draw = function() {
         ctx = gameArea.context;
->>>>>>> Stashed changes:static/js/chess2.js
             ctx.drawImage(this.image, 
                 this.x, 
                 this.y,
                 this.width, this.height);
+        }
     }
 }
 //piece positions to send
@@ -48,38 +46,30 @@ function create_piece(){
     for (let i in chessPiecePos){
         for (let j in i){
             for (k=0;k<j.length;k++){
-<<<<<<< Updated upstream:templates/js/chess.js
                 let (i+j+k) = new component(60,60,"/resources/"+(i+j)+".jpg",(k[0]-1)*80,(k[1]-1)*80,image)
-=======
                 path = "/static/resources/" + toString(i) + "/" + toString(j) + ".jpg"
                 newOb =  new component(96,96,path,((k[0]-1)*128+64),((k[1]-1)*128+64),image ,(i+j+k))
                 chessPiece.push(newOb)
->>>>>>> Stashed changes:static/js/chess2.js
             }
         }
     }
 }
-<<<<<<< Updated upstream:templates/js/chess.js
 function create_scene(){
     let board = new component(640,640,"/resources/chessboard.jpg",0,0,image)
     create_piece()
-=======
 //main game loop after init
 function mainloop(){
     while (chessing){
         render()
     }
->>>>>>> Stashed changes:static/js/chess2.js
 }
 function init(){
     chessing = true
     gameArea.init()
-<<<<<<< Updated upstream:templates/js/chess.js
     create_scene()
 }
 init()
-=======
-    let board = new component(1024,1024,"/static/resources/chessboard.jpg",0,0,image)
+    board = new component(1024,1024,"/static/resources/chessboard.jpg",0,0,image)
     create_piece()
     mainloop()
 }
@@ -92,4 +82,3 @@ function render(){
 }
 //start initalization upon loaded
 document.addEventListener("load",init())
->>>>>>> Stashed changes:static/js/chess2.js
