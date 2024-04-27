@@ -1,1 +1,1 @@
-print('A'.lower())
+print(ord(None))
