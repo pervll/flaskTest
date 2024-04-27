@@ -150,6 +150,9 @@ def chess_game(index):
 def fail():
     return "Fail"
 
+@app.route('/chess_index')
+def chess_index():
+    return 1
 
 if __name__ == '__main__':
     app.run(host=config.HOST, port=config.PORT)

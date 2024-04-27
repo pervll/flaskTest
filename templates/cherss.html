@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="/static/script/jquery.js"></script>
+</head>
+<body>
+    <script>
+        document.addEventListener("click", function(e){
+            var px=e.offsetX
+            alert(px)
+            var py=e.offsetY
+            $.ajax({
+                url:"http://127.0.0.1:5000/chess",
+                type:'POST',
+                dataType:'json',
+                data:{'type':1,'x':px,'y':py},
+                success:function(data){
+                    console.log(data)
+                }
+            })
+        });
+    </script>
+</body>
+</html>

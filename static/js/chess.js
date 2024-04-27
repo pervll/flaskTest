@@ -11,7 +11,7 @@ image.src='/static/resources/chessboard.jpg'
 */
   
 function draw_chess(name,route,top,left) {
-    var c=document.createElement('img');
+    /*var c=document.createElement('img');
     c.id=name;
     c.style.position='absolute'
     c.style.top=top.toString()+"px";
@@ -19,7 +19,14 @@ function draw_chess(name,route,top,left) {
     c.setAttribute('width',112.5);
     c.setAttribute('height',112.5);
     c.setAttribute('src',"/static/resources/"+route)
-    document.body.appendChild(c);
+    document.body.appendChild(c);*/
+    var canvas=document.getElementById('board')
+    var ctx=canvas.getContext("2d")
+    var image=new Image();
+    image.src='/static/resources/'+route
+    image.onload = function() {
+        ctx.drawImage(image,left,top,112.5,112.5)
+    };
 }
 
 function render_chess(data){
@@ -32,9 +39,9 @@ function render_chess(data){
             var s=row.slice(i,i+2)
             if (s.charAt(1)!="o"){
                 if (/^[a-z]$/.test(s.charAt(1))) {
-                    draw_chess(s,"black/"+s.charAt(1)+".svg",j*128+7.75,k*128+7.75)
+                    draw_chess(s,"black/"+s.charAt(1)+".jpg",j*128+7.75,k*128+7.75)
                 } else {
-                    draw_chess(s,"white/"+s.charAt(1)+".svg",j*128+7.75,k*128+7.75)
+                    draw_chess(s,"white/"+s.charAt(1)+".jpg",j*128+7.75,k*128+7.75)
                 }
                 k++
             } else {

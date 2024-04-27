@@ -6,11 +6,11 @@
   <link rel="stylesheet" src="/static/css/chess_style"></link>
 </head>
 <body>
-  <canvas id="board"></canvas>
+  <canvas id="board" width="1024" height="1024"></canvas>
 </body>
 <script src="/static/js/chess.js"></script>
 <script>
-  var c=document.createElement('img');
+  /*var c=document.createElement('img');
   c.id='board';
   c.style.position='absolute'
   c.style.top='0px';
@@ -18,7 +18,14 @@
   c.setAttribute('width',1024);
   c.setAttribute('height',1024);
   c.setAttribute('src',"/static/resources/chessboard.jpg")
-  document.body.appendChild(c);
+  document.body.appendChild(c);*/
+  var canvas=document.getElementById('board')
+    var ctx=canvas.getContext("2d")
+    var image=new Image();
+    image.onload = function() {
+        ctx.drawImage(image,0,0,1024,1024)
+    };
+    image.src='/static/resources/chessboard.jpg'
   var data="{{ data }}"
   render_chess(data)
 
@@ -31,17 +38,19 @@
     sx=event.pageX
     sy=event.pageY
     if (click_cnt>2) {
-      x=pageX
-      y=pageY
+      x=event.pageX
+      y=event.pageY
+      url=window.parent.location.href.slice(0,21)+'/check_index'
       $.ajax({
-        url:'', //填入判定程序所在route
+        url:url, //填入判定程序所在route
         dataType:'json',
         type:'POST',
         data:{'sx':sx,'sy':sy,'x':x,'y':y},
-        success:function(data) {
-          render_chess(data)
+        success:function(response) {
+          alert(response)
         }
       })
+      click_cnt=1
     }
   })
 </script>
