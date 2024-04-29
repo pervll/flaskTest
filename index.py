@@ -7,6 +7,9 @@ from db import(
     connect_db,close_db,insert_into,get_db,set_null
 )
 import time,uuid,json
+from chess import fen_to_board,board_to_fen
+from move import move,move1
+import chess
 from settings import Config
 config=Config()
 
@@ -99,17 +102,19 @@ def chess():
 
         #建立新的棋局数据库
         if master:
+            session['color']='w'
             a=str('x'+str(uuid.uuid3(uuid.NAMESPACE_DNS,username[0]+'_'+partner))[0:8])
             con=connect_db()
             cur=con.cursor()
             cur.execute(f"create table if not exists {a} (playerW text, playerB text, map text, current_player text);")
-            cur.execute(f"insert into {a} values(?,?,?,?);",(username[0],partner,config.DEFAULT_STATUS,username[0]))
+            cur.execute(f"insert into {a} values(?,?,?,?);",(username[0],partner,config.DEFAULT_STATUS,'w'))
             cur.execute("UPDATE accounts SET onPlay = 1 WHERE username IN (?,?)",(username[0],partner))
             session['master']=1
             cur.execute(f"UPDATE accounts SET map_name = ? WHERE username IN (?,?)",(a,username[0],partner))
             con.commit()
             con.close()
         else:
+            session['color']='b'
             a=str('x'+str(uuid.uuid3(uuid.NAMESPACE_DNS,partner+'_'+username[0]))[0:8])
         return redirect(url_for('chess_game',index=a))
     return "0"
@@ -118,6 +123,7 @@ def chess():
 def chess_game(index):
     session['map']=index
     #检测到onplay就把自己从valid_accounts中丢出  
+    '''
     username=session['user']
     con=connect_db()
     cur=con.cursor()
@@ -137,11 +143,15 @@ def chess_game(index):
     cur=con.cursor()
     #cur.execute("DELETE FROM valid_accounts WHERE username = %s" %(session['user']))
     #con.commit()
+    '''
+
+    con=connect_db()
+    cur=con.cursor()
     cur.execute(f"SELECT map FROM {index}")
     data=cur.fetchall()[0][0]
     con.commit()
     close_db(con)
-
+    session['fen']=data
     #return render_template("chess_game.html",**config.ORIGINAL_MAP)
     return render_template("chess_game.html",data=data)
 #TODO 在js中遍历White和Black并渲染棋子，现在遍历有一点问题
@@ -150,9 +160,34 @@ def chess_game(index):
 def fail():
     return "Fail"
 
-@app.route('/chess_index')
+@app.route('/chess_index',methods=['POST'])
 def chess_index():
-    return 1
+    movement={}
+    if request.method=='POST':
+        x=int(request.form['x'])
+        y=int(request.form['y'])
+        sx=int(request.form['sx'])
+        sy=int(request.form['sy'])
+        movement={'sx':sx,'sy':sy,'x':x-sx,'y':y-sy}
+    if session['cp']==session['color']:
+        fen=session['fen']
+        BOARD=fen_to_board(fen)[0]
+        BOARD=move1(BOARD,movement,session['cp'])[1]
+        cp='w'
+        if session['cp']=='w':
+            cp='b'
+        session['fen']=board_to_fen(BOARD,cp)
+        con=connect_db()
+        cur=con.cursor()
+        print(session['fen'])
+        cur.execute(f"UPDATE '{session['map']}' SET map = '{session['fen']}'")
+        cur.execute(f"UPDATE '{session['map']}' SET current_player = '{cp}'")
+        con.commit()
+        close_db(con)
+        return session['fen']
+    return session['fen']
+
+
 
 if __name__ == '__main__':
     app.run(host=config.HOST, port=config.PORT)

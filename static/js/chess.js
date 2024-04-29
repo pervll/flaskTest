@@ -35,19 +35,23 @@ function render_chess(data){
     var j=0
     for (var row of rows) {
         var k=0;
-        for (var i=0;i<row.length;i=i+2){
-            var s=row.slice(i,i+2)
-            if (s.charAt(1)!="o"){
-                if (/^[a-z]$/.test(s.charAt(1))) {
-                    draw_chess(s,"black/"+s.charAt(1)+".jpg",j*128+7.75,k*128+7.75)
-                } else {
-                    draw_chess(s,"white/"+s.charAt(1)+".jpg",j*128+7.75,k*128+7.75)
-                }
-                k++
-            } else {
-                k+=parseInt(s.charAt(1))
+        for (var i=0;i<row.length;){
+            var s=row[i]
+            if (/^[a-z]$/.test(s)) {
+                draw_chess(s,"black/"+s+".jpg",j*128+7.75,k*128+7.75)
+            } 
+            if (/^[A-Z]$/.test(s)) {
+                draw_chess(s,"white/"+s+".jpg",j*128+7.75,k*128+7.75)
             }
-        }
-        j++
+            if (/^[1-9]$/.test(s)) {
+                var s=row.slice(i,i+2)
+                k+=parseInt(s.charAt(0))-1
+                i++
+            }
+            k++
+            i++
+        } 
+        j++   
     }
+        
 }

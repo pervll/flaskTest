@@ -2,8 +2,10 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <script src="/static/script/jquery.js"></script>
   <title>test</title>
-  <link rel="stylesheet" src="/static/css/chess_style"></link>
+  <link rel="stylesheet" src="/static/css/chess_style.css"></link>
+  <meta http-equiv="refresh" content="5">
 </head>
 <body>
   <canvas id="board" width="1024" height="1024"></canvas>
@@ -32,24 +34,41 @@
   var temp=[]
   var sx=0;
   var sy=0;
+  var x=0;
+  var y=0;
   var click_cnt=1
-  document.addEventListener("click", function(event) {
-    click_cnt++;
-    sx=event.pageX
-    sy=event.pageY
-    if (click_cnt>2) {
-      x=event.pageX
-      y=event.pageY
-      url=window.parent.location.href.slice(0,21)+'/check_index'
+  canvas.addEventListener("click", function(event) {
+    if (click_cnt==1){
+      sx=parseInt(event.pageX)
+      sy=parseInt(event.pageY)
+    }else {
+      x=parseInt(event.pageX)
+      y=parseInt(event.pageY)
+    }
+    click_cnt++
+    if (click_cnt==3) {
       $.ajax({
-        url:url, //填入判定程序所在route
-        dataType:'json',
+        url:'/chess_index', //填入判定程序所在route
+        dataType:'text',
         type:'POST',
-        data:{'sx':sx,'sy':sy,'x':x,'y':y},
+        data:{'sx':Math.floor(sx/128),'sy':Math.floor(sy/128),'x':Math.floor(x/128),'y':Math.floor(y/128)},
         success:function(response) {
-          alert(response)
+          var canvas=document.getElementById('board')
+          var ctx=canvas.getContext("2d")
+          ctx.clearRect(0,0,1024,1024)
+          var image=new Image();
+          image.onload = function() {
+            ctx.drawImage(image,0,0,1024,1024)
+          };
+          image.src='/static/resources/chessboard.jpg'
+          re=response
+          render_chess(re)
         }
       })
+      sx=0
+      sy=0
+      x=0
+      y=0
       click_cnt=1
     }
   })

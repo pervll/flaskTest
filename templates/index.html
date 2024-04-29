@@ -2,31 +2,34 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="/static/css/index_style.css">
   <title>test</title>
 </head>
 <body>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <p>{{ message }}</p>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-  <h3>Welcome{% if username %}, {{ username }}{% endif %}!</h3> 
-  <form action="{{ url_for('login') }}">
-    <span>
-      {%if not username %}<button>Log in</button>{% endif %}
-    </span>
-  </form>
-  <form action="{{ url_for('chess') }}">
-    <span>
-      {%if username %}<button>Chess</button>{% endif %}
-    </span>
-  </form>
-  <form action="{{ url_for('logout') }}">
-    <span>
-      {%if username %}<button>Log out</button>{% endif %}
-    </span>
-  </form>
+  <div class="container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <h3>Welcome{% if username %}, {{ username }}{% endif %}!</h3> 
+    <form action="{{ url_for('login') }}">
+      <span>
+        {%if not username %}<button>Log in</button>{% endif %}
+      </span>
+    </form>
+    <form action="{{ url_for('chess') }}">
+      <span>
+        {%if username %}<button>Chess</button>{% endif %}
+      </span>
+    </form>
+    <form action="{{ url_for('logout') }}">
+      <span>
+        {%if username %}<button>Log out</button>{% endif %}
+      </span>
+    </form>
+  </div>
 </body>
 </html>

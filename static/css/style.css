@@ -55,7 +55,7 @@ body {
     font-size: 20px;
     font-weight: 3px;
     letter-spacing: 2px;
-    background-color: #01579b;
+    background-color: #2a72f7;
     border-radius: 10px;
     border: none;
     outline: none;
@@ -65,7 +65,7 @@ body {
 }
 .panel button:hover {
     /*box-shadow: 3px 3px 1px gray;*/
-    background-color: #1a237e;
+    background-color: #033dfc;
 }
 .panel a {
     letter-spacing: 2px;
